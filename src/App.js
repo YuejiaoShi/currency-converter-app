@@ -5,17 +5,25 @@ export default function App() {
   const [fromCur, setFromCur] = useState("EUR");
   const [toCur, setToCur] = useState("USD");
   const [converted, setConverted] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(function () {
-    async function convert() {
-      const res = await fetch(
-        `https://api.frankfurter.app/latest?amount=${amount}&from=${fromCur}&to=${toCur}`
-      );
-      const data = await res.json();
-      setConverted(data.rates[toCur])
-    }
-    convert();
-  }, []);
+  useEffect(
+    function () {
+      async function convert() {
+        setIsLoading(true);
+        const res = await fetch(
+          `https://api.frankfurter.app/latest?amount=${amount}&from=${fromCur}&to=${toCur}`
+        );
+        const data = await res.json();
+        console.log(data);
+        setConverted(data.rates[toCur]);
+        setIsLoading(false);
+      }
+      if (fromCur === toCur) return setConverted(amount);
+      convert();
+    },
+    [amount, fromCur, toCur]
+  );
 
   return (
     <div>
@@ -23,19 +31,23 @@ export default function App() {
         type="text"
         value={amount}
         onChange={(event) => setAmount(Number(event.target.value))}
+        disabled={isLoading}
       />
       <select
         value={fromCur}
-        onChange={(event) => setFromCur(Number(event.target.value))}
+        onChange={(event) => setFromCur(event.target.value)}
+        disabled={isLoading}
       >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
         <option value="CAD">CAD</option>
         <option value="INR">INR</option>
       </select>
+      ➡️
       <select
         value={toCur}
-        onChange={(event) => setToCur(Number(event.target.value))}
+        onChange={(event) => setToCur(event.target.value)}
+        disabled={isLoading}
       >
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
