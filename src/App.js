@@ -6,6 +6,7 @@ export default function App() {
   const [toCur, setToCur] = useState("USD");
   const [converted, setConverted] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [triggerConvert, setTriggerConvert] = useState(false);
 
   useEffect(
     function () {
@@ -24,44 +25,61 @@ export default function App() {
           setIsLoading(false);
         }
       }
-      if (fromCur === toCur) return setConverted(amount);
-      convert();
+      if (fromCur === toCur) {
+        setConverted(amount);
+      } else if (triggerConvert) {
+        convert();
+      }
     },
-    [amount, fromCur, toCur]
+    [amount, fromCur, toCur, triggerConvert]
   );
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    setTriggerConvert(!triggerConvert);
+  }
+
+  function handleInputChange(event) {
+    setAmount(Number(event.target.value));
+    setTriggerConvert(false);
+  }
 
   return (
     <div>
-      <input
-        type="text"
-        value={amount}
-        onChange={(event) => setAmount(Number(event.target.value))}
-        disabled={isLoading}
-      />
-      <select
-        value={fromCur}
-        onChange={(event) => setFromCur(event.target.value)}
-        disabled={isLoading}
-      >
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="CAD">CAD</option>
-        <option value="INR">INR</option>
-      </select>
-      ➡️
-      <select
-        value={toCur}
-        onChange={(event) => setToCur(event.target.value)}
-        disabled={isLoading}
-      >
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-        <option value="CAD">CAD</option>
-        <option value="INR">INR</option>
-      </select>
-      <p>
-      {isLoading ? "Loading..." : `${converted} ${toCur}`}
-      </p>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={amount}
+          onChange={handleInputChange}
+          disabled={isLoading}
+        />
+        <select
+          value={fromCur}
+          onChange={(event) => setFromCur(event.target.value)}
+          disabled={isLoading}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="CAD">CAD</option>
+          <option value="INR">INR</option>
+        </select>
+        ➡️
+        <select
+          value={toCur}
+          onChange={(event) => setToCur(event.target.value)}
+          disabled={isLoading}
+        >
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+          <option value="CAD">CAD</option>
+          <option value="INR">INR</option>
+        </select>
+        <button type="submit" disabled={isLoading}>
+          Convert
+        </button>
+      </form>
+
+      <p>{isLoading ? "Loading..." : `${converted} ${toCur}`}</p>
     </div>
   );
 }
