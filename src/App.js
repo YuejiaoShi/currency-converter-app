@@ -11,13 +11,18 @@ export default function App() {
     function () {
       async function convert() {
         setIsLoading(true);
-        const res = await fetch(
-          `https://api.frankfurter.app/latest?amount=${amount}&from=${fromCur}&to=${toCur}`
-        );
-        const data = await res.json();
-        console.log(data);
-        setConverted(data.rates[toCur]);
-        setIsLoading(false);
+        try {
+          const res = await fetch(
+            `https://api.frankfurter.app/latest?amount=${amount}&from=${fromCur}&to=${toCur}`
+          );
+          const data = await res.json();
+          setConverted(data.rates[toCur]);
+        } catch (error) {
+          console.error("Error fetching conversion rate:", error);
+          setConverted("Error");
+        } finally {
+          setIsLoading(false);
+        }
       }
       if (fromCur === toCur) return setConverted(amount);
       convert();
@@ -55,8 +60,7 @@ export default function App() {
         <option value="INR">INR</option>
       </select>
       <p>
-        {converted}
-        {toCur}
+      {isLoading ? "Loading..." : `${converted} ${toCur}`}
       </p>
     </div>
   );
