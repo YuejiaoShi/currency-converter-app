@@ -56,7 +56,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-p {
+.output {
   font-size: 1.2rem;
   font-weight: bold;
   text-align: center;
@@ -83,4 +83,7 @@ label {
   margin-bottom: 5px;
   display: block;
   margin: auto auto;
+}
+.date{
+  color:#a0a0a0
 }

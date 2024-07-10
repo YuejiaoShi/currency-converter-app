@@ -8,6 +8,8 @@ export default function App() {
   const [converted, setConverted] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [triggerConvert, setTriggerConvert] = useState(false);
+  const [date, setDate] = useState("");
+  const [showDate, setShowDate] = useState(false);
 
   useEffect(
     function () {
@@ -19,6 +21,8 @@ export default function App() {
           );
           const data = await res.json();
           setConverted(data.rates[toCur]);
+          setDate(data.date);
+          setShowDate(true);
         } catch (error) {
           console.error("Error fetching conversion rate:", error);
           setConverted("Error");
@@ -31,8 +35,11 @@ export default function App() {
       } else if (triggerConvert) {
         convert();
       }
+
+      if (showDate) {
+      }
     },
-    [amount, fromCur, toCur, triggerConvert]
+    [amount, fromCur, toCur, triggerConvert, showDate]
   );
 
   function handleSubmit(event) {
@@ -87,7 +94,10 @@ export default function App() {
         </button>
       </form>
 
-      <p>{isLoading ? "Loading..." : `${converted} ${toCur}`}</p>
+      <p className="output">
+        {isLoading ? "Loading..." : `${converted} ${toCur}`}
+      </p>
+      <i className="date">{showDate ? `Last updated at ${date}` : ""}</i>
     </div>
   );
 }
