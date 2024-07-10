@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 export default function App() {
   const [amount, setAmount] = useState(1);
@@ -45,35 +46,42 @@ export default function App() {
   }
 
   return (
-    <div>
+    <div className="container">
       <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={amount}
-          onChange={handleInputChange}
-          disabled={isLoading}
-        />
-        <select
-          value={fromCur}
-          onChange={(event) => setFromCur(event.target.value)}
-          disabled={isLoading}
-        >
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="CAD">CAD</option>
-          <option value="INR">INR</option>
-        </select>
-        ➡️
-        <select
-          value={toCur}
-          onChange={(event) => setToCur(event.target.value)}
-          disabled={isLoading}
-        >
-          <option value="USD">USD</option>
-          <option value="EUR">EUR</option>
-          <option value="CAD">CAD</option>
-          <option value="INR">INR</option>
-        </select>
+        <div className="input-container">
+          <label htmlFor="amount">Amount:</label>
+          <input
+            id="amount"
+            type="text"
+            value={amount}
+            onChange={handleInputChange}
+            disabled={isLoading}
+          />
+        </div>
+        <div className="selection">
+          <select
+            value={fromCur}
+            onChange={(event) => setFromCur(event.target.value)}
+            disabled={isLoading}
+          >
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="CAD">CAD</option>
+            <option value="INR">INR</option>
+          </select>
+          <span className="convert-arrow">➡️</span>
+          <select
+            value={toCur}
+            onChange={(event) => setToCur(event.target.value)}
+            disabled={isLoading}
+          >
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="CAD">CAD</option>
+            <option value="INR">INR</option>
+          </select>
+        </div>
+
         <button type="submit" disabled={isLoading}>
           Convert
         </button>
